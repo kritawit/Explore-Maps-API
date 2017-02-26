@@ -17,18 +17,43 @@ class ViewController: UIViewController, MKMapViewDelegate {
 
     let myGeocoder: CLGeocoder = CLGeocoder()
 
+    func getRandomColor() -> UIColor {
+
+        let randomRed = CGFloat(arc4random_uniform(256)) / 255
+        let randomGreen = CGFloat(arc4random_uniform(256)) / 255
+        let randomBlue = CGFloat(arc4random_uniform(256)) / 255
+
+        let randomColor = UIColor.init(red: randomRed, green: randomGreen, blue: randomBlue, alpha: 1)
+
+        return randomColor
+
+    }
+
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        
+
         let newAnnotationView = MKPinAnnotationView()
         newAnnotationView.animatesDrop = true
         newAnnotationView.pinTintColor = #colorLiteral(red: 0.9529411793, green: 0.6862745285, blue: 0.1333333403, alpha: 1)
         newAnnotationView.canShowCallout = true
-        
-        
+
+        if annotation.title! == "Wat Khwang" {
+            newAnnotationView.pinTintColor = getRandomColor()
+
+            let myWatkhwangImg = UIImageView.init(image: #imageLiteral(resourceName: "watkhwang"))
+            
+            myWatkhwangImg.frame = CGRect(origin: newAnnotationView.frame.origin, size: CGSize(width: 30, height: 30))
+            
+            
+            newAnnotationView.leftCalloutAccessoryView = myWatkhwangImg
+
+        } else {
+            newAnnotationView.pinTintColor = #colorLiteral(red: 0.9529411793, green: 0.6862745285, blue: 0.1333333403, alpha: 1)
+        }
+
         return newAnnotationView
-        
+
     }
-    
+
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
 
         let centerOfMap = myMapOUTLET.centerCoordinate
