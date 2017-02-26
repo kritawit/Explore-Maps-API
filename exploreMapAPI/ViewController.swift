@@ -12,6 +12,7 @@ import MapKit
 class ViewController: UIViewController {
 
     @IBOutlet weak var myMapOUTLET: MKMapView!
+    let myGeocoder: CLGeocoder = CLGeocoder()
 
     @IBAction func tapOnMap(_ sender: UITapGestureRecognizer) {
 
@@ -19,6 +20,23 @@ class ViewController: UIViewController {
 
             let touchLocationAsPoint: CGPoint = sender.location(in: view)
             let touchLocationAsCoodinate: CLLocationCoordinate2D = myMapOUTLET.convert(touchLocationAsPoint, toCoordinateFrom: view)
+
+            let newLocation = CLLocation(latitude: touchLocationAsCoodinate.latitude, longitude: touchLocationAsCoodinate.longitude)
+
+            myGeocoder.reverseGeocodeLocation(newLocation, completionHandler: { (placemarks, error) in
+
+                let locality = placemarks?[0].locality ?? "Somewhere"
+
+                let country = placemarks?[0].country ?? "Some country"
+                
+                let newAnnotation = MKPointAnnotation()
+                newAnnotation.coordinate = touchLocationAsCoodinate
+                newAnnotation.title = locality
+                newAnnotation.subtitle = country
+                
+                self.myMapOUTLET.addAnnotation(newAnnotation)
+
+            })
 
             UIView.animate(withDuration: 1.5, animations: {
 
